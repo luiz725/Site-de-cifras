@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site de Cifras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #444;
+        }
+        nav a {
+            color: #fff;
+            padding: 1rem;
+            text-decoration: none;
+            display: block;
+        }
+        nav a:hover {
+            background-color: #555;
+        }
+        .container {
+            padding: 2rem;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .cifra {
+            background: #fff;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .add-music-form {
+            background: #fff;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+    </style>
+    <script>
+        function transposeCifra(cifra, semitones) {
+            const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+            const transposeNote = (note) => {
+                const index = notes.indexOf(note);
+                if (index === -1) return note;
+                return notes[(index + semitones + 12) % 12];
+            };
+            return cifra.replace(/([CDEFGAB]#?)/g, (_, note) => transposeNote(note));
+        }
+
+        function transposeAllCifras(semitones) {
+            document.querySelectorAll('.cifra pre').forEach(pre => {
+                const original = pre.getAttribute('data-original');
+                pre.textContent = transposeCifra(original, semitones);
+            });
+        }
+
+        function addMusic() {
+            const title = document.getElementById('music-title').value;
+            const artist = document.getElementById('music-artist').value;
+            const chords = document.getElementById('music-chords').value;
+
+            const newCifra = document.createElement('div');
+            newCifra.classList.add('cifra');
+            newCifra.innerHTML = `<h3>${title} - ${artist}</h3><pre data-original="${chords}">${chords}</pre>`;
+
+            document.getElementById('cifras').appendChild(newCifra);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.cifra pre').forEach(pre => {
+                pre.setAttribute('data-original', pre.textContent);
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Site de Cifras</h1>
+    </header>
+    <nav>
+        <a href="#home">Início</a>
+        <a href="#cifras">Cifras</a>
+        <a href="#contato">Contato</a>
+    </nav>
+    <div class="container" id="home">
+        <h2>Bem-vindo ao Site de Cifras</h2>
+        <p>Aqui você encontra cifras de músicas populares para tocar no seu instrumento favorito.</p>
+    </div>
+    <div class="container" id="cifras">
+        <h2>Cifras Populares</h2>
+        <div class="cifra">
+            <h3>Asa Branca - Luiz Gonzaga</h3>
+            <pre>
+                A                       E
+                Quando olhei a terra ardendo
+                          A
+                Qual fogueira de São João
+                                         E
+                Eu perguntei a Deus do céu, ai
+                       A    E  A
+                Por que tamanha judiação
+            </pre>
+        </div>
+        <div class="cifra">
+            <h3>Garota de Ipanema - Tom Jobim</h3>
+            <pre>
+                F7M        G7        Gm7        F#7(b5)
+                Olha que coisa mais linda mais cheia de graça
+                F7M              G7            Gm7        F#7(b5)
+                É ela menina que vem e que passa
+                F7M      G7         Gm7   F#7(b5)
+                Num doce balanço a caminho do mar
+            </pre>
+        </div>
+        <div class="add-music-form">
+            <h3>Adicionar Nova Música</h3>
+            <form onsubmit="addMusic(); return false;">
+                <label for="music-title">Título:</label><br>
+                <input type="text" id="music-title" required><br>
+                <label for="music-artist">Artista:</label><br>
+                <input type="text" id="music-artist" required><br>
+                <label for="music-chords">Cifras:</label><br>
+                <textarea id="music-chords" rows="5" required></textarea><br><br>
+                <button type="submit">Adicionar Música</button>
+            </form>
+        </div>
+        <h3>Transpor Cifras</h3>
+        <button onclick="transposeAllCifras(-1)">-1</button>
+        <button onclick="transposeAllCifras(1)">+1</button>
+    </div>
+    <div class="container" id="contato">
+        <h2>Contato</h2>
+        <p>Para sugestões de cifras ou outras informações, entre em contato:</p>
+        <p>Email: contato@sitecifras.com</p>
+    </div>
+    <footer>
+        <p>&copy; 2024 Site de Cifras. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>
